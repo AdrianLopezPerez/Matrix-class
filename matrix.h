@@ -4,7 +4,7 @@
 // * BASED IN THE WORK OF MICHAEL L HALLS-MOORE *
 // *      AS FOUND IN QUANTSTART.COM AND        *
 // *  HIS BOOK "C++ FOR QUANTITATIVE FINANCE"   *
-// *  SLIGHTLY MODIFIED BY ME (ADRIAN LOPEZ)    *
+// *  THOROUGHLY MODIFIED BY ME (ADRIAN LOPEZ)  *
 // *          FOR MY OWN CONVENIENCE            *
 //  ********************************************
 // 
