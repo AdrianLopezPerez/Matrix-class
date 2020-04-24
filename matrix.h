@@ -65,11 +65,10 @@ public:
     // Access the elements
     T& operator()(const int& row, const int& col);
     const T& operator()(const int& row, const int& col) const;
-
-    // Access individual rows and columns
-    std::vector<T> row(const int& row) const;
-    std::vector<T> col(const int& col) const;
-
+    
+    // Access the rows
+    
+    
     // Access the row and column sizes                                                                                                                                                                                              
     unsigned short nrow() const;
     unsigned short ncol() const;
@@ -464,23 +463,18 @@ const T& Matrix<T>::operator()(const int& row, const int& col) const {
     else throw "Out of limits";
 }
 
-// Access row
+// Access the individual row
 template<typename T>
-std::vector<T> Matrix<T>::row(const int& row) const{
+std::vector<T>& Matrix<T>::operator[](const int& row) {
     if (row >= 0 && row < nrows) {
         return this->mat[row];
     }
     else throw "Out of limits";
 }
 
-template<typename T>
-std::vector<T> Matrix<T>::col(const int& col) const{
-    if (col >= 0 && col < ncols) {
-        std::vector<T> v;
-        for (unsigned short i = 0; i < nrows; ++i) {
-            v.push_back(mat[i][col]);
-        }
-        return v;
+const std::vector<T>& Matrix<T>::operator[](const int& row) const {
+    if (row >= 0 && row < nrows) {
+        return this->mat[row];
     }
     else throw "Out of limits";
 }
