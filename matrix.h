@@ -33,7 +33,7 @@ private:
     unsigned short ncols;
 
 public:
-    Matrix(int _rows, int _cols);
+    Matrix(signed int _rows, signed int _cols);
     Matrix(const Matrix<T>& rhs);
     virtual ~Matrix();
 
@@ -76,7 +76,7 @@ public:
 
 // Parameter Constructor                                                                                                                                                      
 template<typename T>
-Matrix<T>::Matrix(int _rows, int _cols) {
+Matrix<T>::Matrix(signed int _rows, signed int _cols) {
     if (_rows > 0 && _cols > 0 && _rows <= 256 && _cols <= 256) {
         mat.resize(_rows);
         for (unsigned short i = 0; i < mat.size(); ++i) {
@@ -381,7 +381,7 @@ T Matrix<T>::det() {
             // Variable to change the sign of the determinant when rows are swapped.
             short sign_by_row_swap = 1;
             T coeff;
-            for (int i = 0; i < nrows - 1; ++i) {
+            for (signed short i = 0; i < nrows - 1; ++i) { // DO NOT change 'signed short' to 'unsigned short'
                 if (up_triang[i][i] != 0) {
                     for (unsigned short j = 1 + i; j < nrows; ++j) {
                         coeff = up_triang[j][i] / up_triang[i][i];
@@ -393,19 +393,19 @@ T Matrix<T>::det() {
                 }
                 else if (i < nrows - 1) {
                     std::vector<T> v;
-                    for (unsigned short j = i; j < nrows - 1; ++j) {
-                        if (up_triang[j + 1][i] != 0) {
+                    for (unsigned short j = i + 1; j < nrows; ++j) {
+                        if (up_triang[j][i] != 0) {
                             v = up_triang[i];
-                            up_triang[i] = up_triang[j + 1];
-                            up_triang[j + 1] = v;
+                            up_triang[i] = up_triang[j];
+                            up_triang[j] = v;
                             sign_by_row_swap *= -1;
+                            --i;
                             break;
                         }
-                        else return 0;
+                        else if (j = nrows - 1) return 0;
                     }
-                    --i;
                 }
-                else if (i = nrows - 1) return 0;
+                else return 0;
             }
             std::vector<T> v = up_triang.diagonal();
             T result = 1;
