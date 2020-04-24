@@ -1,7 +1,7 @@
 # Matrix
 ## Warning
 - All operations and functions are intended for numeric types only.
-- Be warned that, generally, determinant and inversion do not work properly for integers as a consequence of division concurring in these calculations. Use float or an equivalent in these cases.
+- Be warned that, generally, determinant and inversion do not work properly for integers as a consequence of division taking place in these calculations. Use float or an equivalent in these cases.
 - Matrix row and column indices ```x[row][col]``` start at 0 and end at 255.
 - Row and column size limited to 256 for perfomance. If they were to be increased, have in mind that inversion and determinant algorithms execute in cubic time.
 ## Declaration and construction
