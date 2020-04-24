@@ -10,7 +10,6 @@
 // 
 // MY OWN CONTRIBUTIONS
 // Changes:
-// - Changed unsigned short types to unsigned short
 // - Rows and columns capped to 8000
 // - Changed the name of some original methods and vars
 // New functions:
