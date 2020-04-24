@@ -10,7 +10,7 @@
 // 
 // MY OWN CONTRIBUTIONS
 // Changes:
-// - Rows and columns capped to 8000
+// - Rows and columns capped to 256
 // - Changed the name of some original methods and vars
 // New functions:
 // - Determinant
@@ -81,7 +81,7 @@ public:
 // Parameter Constructor                                                                                                                                                      
 template<typename T>
 Matrix<T>::Matrix(int _rows, int _cols) {
-     if (_rows > 0 && _cols > 0 && _rows <= 8000 && _cols <= 8000) {
+     if (_rows > 0 && _cols > 0 && _rows <= 256 && _cols <= 256) {
         mat.resize(_rows);
         for (unsigned short i = 0; i < mat.size(); ++i) {
             mat[i].resize(_cols, 0);
@@ -89,7 +89,7 @@ Matrix<T>::Matrix(int _rows, int _cols) {
         nrows = _rows;
         ncols = _cols;
     }
-    else throw "A matrix with non-positive or more than 8000 rows or columns is not allowed";
+    else throw "A matrix with non-positive or more than 256 rows or columns is not allowed";
 }
 
 // Copy Constructor                                                                                                                                                           
