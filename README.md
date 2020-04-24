@@ -52,7 +52,7 @@ x.cols();
 ```
 ## Operations with matrices or scalars
 ### Addition, substraction, product, and cumulative variants
-Let ```y``` be a matrix or a scalar,
+Let ```y``` be a ```Matrix``` or a scalar,
 ```
 Matrix<type> x(rows,columns);
 x + y, x - y, x * y;
