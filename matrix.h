@@ -81,7 +81,7 @@ public:
 // Parameter Constructor                                                                                                                                                      
 template<typename T>
 Matrix<T>::Matrix(int _rows, int _cols) {
-     if (_rows > 0 && _cols > 0 && _rows < 8000 && _cols < 8000) {
+     if (_rows > 0 && _cols > 0 && _rows <= 8000 && _cols <= 8000) {
         mat.resize(_rows);
         for (unsigned short i = 0; i < mat.size(); ++i) {
             mat[i].resize(_cols, 0);
