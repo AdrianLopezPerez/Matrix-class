@@ -44,7 +44,7 @@ Matrix y = x.t();
 y[column];
 ```
 The row of the ```y``` matrix is the column of the x matrix.
-Do not access with ```x.t()[column]```. While it is possible, it will transpose the whole matrix each time, which is inefficient. Just store the transpose and access the rows as done above.
+When planning to access more than one column, do not access with ```x.t()[column]```. While it is possible, it will transpose the whole matrix each time, which is inefficient. Just store the transpose and access the rows as done above.
 ## Get the number of rows or columns
 ```
 x.rows();
