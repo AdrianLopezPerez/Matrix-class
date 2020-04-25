@@ -70,7 +70,7 @@ public:
     unsigned short rows() const;
     unsigned short cols() const;
 
-    // Print
+    // Print the matrix in console
     void print();
 };
 
