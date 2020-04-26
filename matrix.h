@@ -40,27 +40,27 @@ public:
     // Operator overloading, for "standard" mathematical matrix operations                                                                                                                                                          
     Matrix<T>& operator=(const Matrix<T>& rhs);
 
-    // MATRIX-MATRIX OPERATIONS                                                                                                                                                                                               
-    Matrix<T> operator+(const Matrix<T>& rhs);          // ADDITION
-    Matrix<T>& operator+=(const Matrix<T>& rhs);        // CUMULATIVE ADDITION
-    Matrix<T> operator-(const Matrix<T>& rhs);          // SUBSTRACTION
-    Matrix<T>& operator-=(const Matrix<T>& rhs);        // CUMULATIVE SUBSTRACTION
-    Matrix<T> operator*(const Matrix<T>& rhs);          // MATRIX PRODUCT
-    Matrix<T>& operator*=(const Matrix<T>& rhs);        // CUMULATIVE MATRIX PRODUCT
-    Matrix<T> t();                                      // TRANSPOSITION
-    Matrix<T> inv();                                    // INVERSION
-    void identity();                                    // CONSTRUCTION OF N-DIMENSIONAL IDENTITY
+    // Matrix-matrix operations                                                                                                                                                                                             
+    Matrix<T> operator+(const Matrix<T>& rhs);   // Addition
+    Matrix<T>& operator+=(const Matrix<T>& rhs); // Cumulative addition
+    Matrix<T> operator-(const Matrix<T>& rhs);   // Substraction
+    Matrix<T>& operator-=(const Matrix<T>& rhs); // Cumulative substraction
+    Matrix<T> operator*(const Matrix<T>& rhs);   // Matrix product
+    Matrix<T>& operator*=(const Matrix<T>& rhs); // Cumulative product
+    Matrix<T> t();                               // Transposition
+    Matrix<T> inv();                             // Inversion
+    void identity();                             // Construction of n-dimensional matrix
 
-    // MATRIX-SCALAR OPERATIONS                                                                                                                                                                                                    
-    Matrix<T> operator+(const T& rhs);                  // ADDITION OF SCALAR TO EACH ELEMENT 
-    Matrix<T> operator-(const T& rhs);                  // SUBSTRACTION OF SCALAR TO EACH ELEMENT
-    Matrix<T> operator*(const T& rhs);                  // PRODUCT OF SCALAR TO EACH ELEMENT
-    Matrix<T> operator/(const T& rhs);                  // DIVISION BY SCALAR TO EACH ELEMENT
-    T det();                                            // DETERMINANT
-    T trace();                                          // TRACE
+    // Matrix-scalar operations                                                                                                                                                                                                    
+    Matrix<T> operator+(const T& rhs);           // Addition of scalar to each element
+    Matrix<T> operator-(const T& rhs);           // Substraction of scalar to each element
+    Matrix<T> operator*(const T& rhs);           // Product by scalar
+    Matrix<T> operator/(const T& rhs);           // Division by scalar
+    T det();                                     // Determinant
+    T trace();                                   // Trace
 
     // Matrix/vector operations                                                                                                                                                                                                     
-    std::vector<T> diagonal();                          // ELEMENTS IN DIAGONAL
+    std::vector<T> diagonal();                   // Elements in diagonal
 
     // Access the elements by rows
     std::vector<T>& operator[](const int& row);
@@ -193,7 +193,7 @@ Matrix<T>& Matrix<T>::operator*=(const Matrix<T>& rhs) {
     return *this;
 }
 
-// TRANSPOSE                                                                                                                                     
+// Transpose                                                                                                                                     
 template<typename T>
 Matrix<T> Matrix<T>::t() {
     Matrix result(nrows, ncols);
@@ -205,7 +205,7 @@ Matrix<T> Matrix<T>::t() {
     return result;
 }
 
-// INVERSION
+// Inversion
 template<typename T>
 Matrix<T> Matrix<T>::inv() {
     if (nrows != ncols) throw "Non-invertible";
@@ -270,7 +270,7 @@ Matrix<T> Matrix<T>::inv() {
     }
 }
 
-// CONSTRUCTION OF N-DIMENSIONAL IDENTITY
+// Construction of n-dimensional identity
 template<typename T>
 void Matrix<T>::identity() {
     if (nrows == ncols) {
@@ -380,7 +380,10 @@ T Matrix<T>::det() {
             // Variable to change the sign of the determinant when rows are swapped.
             short sign_by_row_swap = 1;
             T coeff;
-            for (signed int i = 0; i < nrows - 1; ++i) { // DO NOT change 'signed int' to 'unsigned short' or smth else
+            // DO NOT change 'signed int' to 'unsigned short' or smth else below
+            // 'signed' bc when up_triang[0][0]=0, then i = -1.
+            // 'int' bc the max positive value of signed int is >= that of unsigned short.
+            for (signed int i = 0; i < nrows - 1; ++i) { 
                 if (up_triang[i][i] != 0) {
                     for (unsigned short j = i + 1; j < nrows; ++j) {
                         coeff = up_triang[j][i] / up_triang[i][i];
@@ -416,7 +419,7 @@ T Matrix<T>::det() {
     }
 }
 
-// TRACE
+// Trace
 template<typename T>
 T Matrix<T>::trace() {
     if (nrows != ncols) throw "Matrix is non-square";
@@ -469,13 +472,14 @@ inline unsigned short Matrix<T>::cols() const {
     return this->ncols;
 }
 
-// PRINT MATRIX
+// Print matrix to console
 template<typename T>
 void Matrix<T>::print() {
     std::cout << std::endl;
     for (unsigned short i = 0; i < nrows; ++i) {
         for (unsigned short j = 0; j < ncols; ++j) {
             // Round very small doubles to zero
+            // Avoids spurious values which should be zero
             if (std::abs(mat[i][j]) < 1.0e-15) mat[i][j] = 0;
             // Align positives with negatives (aesthetic)
             if (mat[i][j] >= 0) std::cout << ' ';
