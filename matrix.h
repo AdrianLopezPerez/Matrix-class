@@ -41,26 +41,27 @@ public:
     Matrix<T>& operator=(const Matrix<T>& rhs);
 
     // Matrix-matrix operations                                                                                                                                                                                             
-    Matrix<T> operator+(const Matrix<T>& rhs);   // Addition
-    Matrix<T>& operator+=(const Matrix<T>& rhs); // Cumulative addition
-    Matrix<T> operator-(const Matrix<T>& rhs);   // Substraction
-    Matrix<T>& operator-=(const Matrix<T>& rhs); // Cumulative substraction
-    Matrix<T> operator*(const Matrix<T>& rhs);   // Matrix product
-    Matrix<T>& operator*=(const Matrix<T>& rhs); // Cumulative product
-    Matrix<T> t();                               // Transposition
-    Matrix<T> inv();                             // Inversion
-    void identity();                             // Construction of n-dimensional matrix
+    Matrix<T> operator+(const Matrix<T>& rhs);    // Addition
+    Matrix<T>& operator+=(const Matrix<T>& rhs);  // Cumulative addition
+    Matrix<T> operator-(const Matrix<T>& rhs);    // Substraction
+    Matrix<T>& operator-=(const Matrix<T>& rhs);  // Cumulative substraction
+    Matrix<T> operator*(const Matrix<T>& rhs);    // Matrix product
+    Matrix<T>& operator*=(const Matrix<T>& rhs);  // Cumulative product
+    Matrix<T> t();                                // Transposition
+    Matrix<T> inv();                              // Inversion
+    std::vector<T> solve(const std::vector<T>& b);// Solve
+    void identity();                              // Construction of n-dimensional matrix
 
     // Matrix-scalar operations                                                                                                                                                                                                    
-    Matrix<T> operator+(const T& rhs);           // Addition of scalar to each element
-    Matrix<T> operator-(const T& rhs);           // Substraction of scalar to each element
-    Matrix<T> operator*(const T& rhs);           // Product by scalar
-    Matrix<T> operator/(const T& rhs);           // Division by scalar
-    T det();                                     // Determinant
-    T trace();                                   // Trace
+    Matrix<T> operator+(const T& rhs);            // Addition of scalar to each element
+    Matrix<T> operator-(const T& rhs);            // Substraction of scalar to each element
+    Matrix<T> operator*(const T& rhs);            // Product by scalar
+    Matrix<T> operator/(const T& rhs);            // Division by scalar
+    T det();                                      // Determinant
+    T trace();                                    // Trace
 
     // Matrix/vector operations                                                                                                                                                                                                     
-    std::vector<T> diagonal();                   // Elements in diagonal
+    std::vector<T> diagonal();                    // Elements in diagonal
 
     // Access the elements by rows
     std::vector<T>& operator[](const int& row);
@@ -214,7 +215,6 @@ Matrix<T> Matrix<T>::inv() {
         result.identity();
         Matrix<T> up_triang(nrows, nrows);
         up_triang.mat = mat;
-        std::vector<T> v;
         T coeff;
         for (signed int i = 0; i < nrows - 1; ++i) {
             if (up_triang[i][i] != 0) {
@@ -222,9 +222,9 @@ Matrix<T> Matrix<T>::inv() {
                     coeff = up_triang[j][i] / up_triang[i][i];
                     for (unsigned short k = 0; k < ncols; ++k) {
                         up_triang[j][k] = up_triang[j][k]
-                            - coeff * up_triang[i][k];
+                                - coeff * up_triang[i][k];
                         result[j][k] = result[j][k]
-                            - coeff * result[i][k];
+                             - coeff * result[i][k];
                     }
                 }
             }
@@ -254,10 +254,10 @@ Matrix<T> Matrix<T>::inv() {
             }
         }
         // Convert lhs to upper triangular
-        for (unsigned short i = nrows - 1; i > 0 && i < nrows; --i) {
-            for (unsigned short j = i - 1; j >= 0 && j < nrows - 1; --j) {
+        for (unsigned short i = nrows - 1; i > 0; --i) {
+            for (unsigned short j = i - 1; j >= 0; --j) {
                 coeff = up_triang[j][i];
-                for (unsigned short k = nrows - 1; k >= 0 && k < nrows; --k) {
+                for (unsigned short k = nrows - 1; k >= 0; --k) {
                     up_triang[j][k] = up_triang[j][k]
                         - coeff * up_triang[i][k];
                     result[j][k] = result[j][k]
@@ -268,6 +268,66 @@ Matrix<T> Matrix<T>::inv() {
 
         return result;
     }
+}
+
+// Solve 
+template<typename T>
+std::vector<T> Matrix<T>::solve(const std::vector<T>& b) {
+    Matrix<T> gauss_jordan(nrows, ncols);
+    gauss_jordan.mat = mat;
+    std::vector<T> solution = b;
+    T coeff;
+    for (signed int i = 0; i < nrows - 1; ++i) {
+        if (gauss_jordan[i][i] != 0) {
+            for (unsigned short j = i + 1; j < nrows; ++j) {
+                coeff = gauss_jordan[j][i] / gauss_jordan[i][i];
+                for (unsigned short k = 0; k < ncols; ++k) {
+                    gauss_jordan[j][k] = gauss_jordan[j][k]
+                               - coeff * gauss_jordan[i][k];
+                    solution[j] = solution[j] - coeff * solution[i];
+                }
+            }
+        }
+        else {
+            std::vector<T> v;
+            for (unsigned short j = i + 1; j < nrows; ++j) {
+                if (gauss_jordan[j][i] != 0) {
+                    v = gauss_jordan[i];
+                    gauss_jordan[i] = gauss_jordan[j];
+                    gauss_jordan[j] = v;
+                    v = solution[i];
+                    solution[i] = solution[j];
+                    solution[j] = v;
+                    --i;
+                    break;
+                }
+                else if (j = nrows - 1) {
+                    if (solution[nrows - 1] == 0) throw "Indeterminate system";
+                    else throw "Incompatible system";
+                }
+            }
+        }
+    }
+    // Get all pivots equal to one on lhs
+    for (unsigned short i = 0; i < nrows; ++i) {
+        coeff = gauss_jordan[i][i];
+        for (unsigned short j = 0; j < nrows; ++j) {
+            gauss_jordan[i][j] = gauss_jordan[i][j] / coeff;
+            solution[i] = solution[i] / coeff;
+        }
+    }
+    // Convert lhs to upper triangular
+    for (unsigned short i = nrows - 1; i > 0; --i) {
+        for (unsigned short j = i - 1; j >= 0; --j) {
+            coeff = gauss_jordan[j][i];
+            for (unsigned short k = nrows - 1; k >= 0; --k) {
+                gauss_jordan[j][k] = gauss_jordan[j][k]
+                           - coeff * gauss_jordan[i][k];
+                solution[j] = solution[j] - coeff * solution[i];
+            }
+        }
+    }
+    return solution;
 }
 
 // Construction of n-dimensional identity
@@ -351,7 +411,7 @@ Matrix<T> Matrix<T>::operator/(const T& rhs) {
     }
 }
 
-// DETERMINANT
+// Determinant
 template<typename T>
 T Matrix<T>::det() {
     if (nrows != ncols) throw "Matrix is non-square";
@@ -383,7 +443,7 @@ T Matrix<T>::det() {
             // DO NOT change 'signed int' to 'unsigned short' or smth else below
             // 'signed' bc when up_triang[0][0]=0, then i = -1.
             // 'int' bc the max positive value of signed int is >= that of unsigned short.
-            for (signed int i = 0; i < nrows - 1; ++i) { 
+            for (signed int i = 0; i < nrows - 1; ++i) {
                 if (up_triang[i][i] != 0) {
                     for (unsigned short j = i + 1; j < nrows; ++j) {
                         coeff = up_triang[j][i] / up_triang[i][i];
