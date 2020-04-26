@@ -270,7 +270,7 @@ Matrix<T> Matrix<T>::inv() {
     }
 }
 
-// Solve 
+// Solve INCOMPLETE, ONLY WORKS FOR DETERMINATE SYSTEMS
 template<typename T>
 std::vector<T> Matrix<T>::solve(const std::vector<T>& b) {
     Matrix<T> gauss_jordan(nrows, ncols);
