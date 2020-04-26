@@ -74,9 +74,10 @@ Returns an object of class ```Matrix```.
 x.inv();
 ```
 ## Solve linear system
-Returns a vector of solutions.
+Solves a system of the form ```(x|b)``` by Gauss-Jordan elimination. Requires a vector ```b``` to be passed as an argument. Returns a vector of solutions.
 ```
-x.solve();
+std::vector b;
+x.solve(b);
 ```
 ## Identity
 Does not return anything. Transforms a square matrix into a n-dimensional identity matrix.
