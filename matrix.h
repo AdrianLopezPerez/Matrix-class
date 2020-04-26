@@ -49,7 +49,7 @@ public:
     Matrix<T>& operator*=(const Matrix<T>& rhs);  // Cumulative product
     Matrix<T> t();                                // Transposition
     Matrix<T> inv();                              // Inversion
-    std::vector<T> solve(const std::vector<T>& b);// Solve
+    std::vector<T>& solve(const std::vector<T>& b);// Solve
     void identity();                              // Construction of n-dimensional matrix
 
     // Matrix-scalar operations                                                                                                                                                                                                    
@@ -254,10 +254,10 @@ Matrix<T> Matrix<T>::inv() {
             }
         }
         // Convert lhs to upper triangular
-        for (unsigned short i = nrows - 1; i > 0; --i) {
-            for (unsigned short j = i - 1; j >= 0; --j) {
+        for (signed int i = nrows - 1; i > 0; --i) {
+            for (signed int j = i - 1; j >= 0; --j) {
                 coeff = up_triang[j][i];
-                for (unsigned short k = nrows - 1; k >= 0; --k) {
+                for (signed int k = nrows - 1; k >= 0; --k) {
                     up_triang[j][k] = up_triang[j][k]
                         - coeff * up_triang[i][k];
                     result[j][k] = result[j][k]
@@ -270,9 +270,9 @@ Matrix<T> Matrix<T>::inv() {
     }
 }
 
-// Solve INCOMPLETE, ONLY WORKS FOR DETERMINATE SYSTEMS
+// Solve 
 template<typename T>
-std::vector<T> Matrix<T>::solve(const std::vector<T>& b) {
+std::vector<T>& Matrix<T>::solve(const std::vector<T>& b) {
     Matrix<T> gauss_jordan(nrows, ncols);
     gauss_jordan.mat = mat;
     std::vector<T> solution = b;
@@ -295,9 +295,9 @@ std::vector<T> Matrix<T>::solve(const std::vector<T>& b) {
                     v = gauss_jordan[i];
                     gauss_jordan[i] = gauss_jordan[j];
                     gauss_jordan[j] = v;
-                    v = solution[i];
+                    v[i] = solution[i];
                     solution[i] = solution[j];
-                    solution[j] = v;
+                    solution[j] = v[j];
                     --i;
                     break;
                 }
@@ -317,10 +317,10 @@ std::vector<T> Matrix<T>::solve(const std::vector<T>& b) {
         }
     }
     // Convert lhs to upper triangular
-    for (unsigned short i = nrows - 1; i > 0; --i) {
-        for (unsigned short j = i - 1; j >= 0; --j) {
+    for (signed int i = nrows - 1; i > 0; --i) {
+        for (signed int j = i - 1; j >= 0; --j) {
             coeff = gauss_jordan[j][i];
-            for (unsigned short k = nrows - 1; k >= 0; --k) {
+            for (signed int k = nrows - 1; k >= 0; --k) {
                 gauss_jordan[j][k] = gauss_jordan[j][k]
                            - coeff * gauss_jordan[i][k];
                 solution[j] = solution[j] - coeff * solution[i];
