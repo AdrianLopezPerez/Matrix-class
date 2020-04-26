@@ -73,6 +73,11 @@ Returns an object of class ```Matrix```.
 ```
 x.inv();
 ```
+## Solve linear system
+Returns a vector of solutions.
+```
+x.solve();
+```
 ## Identity
 Does not return anything. Transforms a square matrix into a n-dimensional identity matrix.
 ```
